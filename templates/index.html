@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomePage</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.1/socket.io.js" integrity="sha512-Z6C1p1NIexPj5MsVUunW4pg7uMX6/TT3CUVldmjXx2kpip1eZcrAnxIusDxyFIikyM9A61zOVNgvLr/TGudOQg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #DCF8C6;
+        }
+        h1{
+            font-family: 'Lucida Sans';
+            background-color: #075E54;
+            color: #FFF;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #075E54;
+            border: none;
+            border-radius: 10px;
+            color: #FFF;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        #lista_mensagens{
+            padding: 10px;
+            height: calc(100vh - 150px);
+            overflow-y: scroll;
+            
+        }
+        #lista_mensagens p {
+            background-color: #FFF;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+        .box_usuario{
+            display: flex;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #F4F4F4;
+            border: none;
+            padding: 10px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #usuario{
+            margin-right: 10px;
+            width: 30%;
+            height: 30px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1)
+        }
+        #mensagem{
+            flex: 1;
+            height: 30px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 -2px 5px rgba(0.1, 0.1, 0.1, 0.1)
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 style>LS | Chatcls</h1>
+    <div id="lista_mensagens">
+    </div>
+    <div class="box_usuario">
+        <input type="text" id="usuario" placeholder="Usuário" required>
+        <input type="text" id="mensagem" placeholder="Mensagem" required>
+        <button id="botao">Enviar</button>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            var socket = io("192.168.1.36:5000");
+            socket.on("connect", function(){
+                console.log("usuário conectou")   
+            });
+            
+            socket.on("message", function(data){
+                console.log("disparou uma mensagem");
+                $("#lista_mensagens").append($("<p>").text(data));
+            });
+
+            $("#botao").on("click", function(){
+                console.log("clicou no botao");
+                socket.send($("#usuario").val()+": "+$("#mensagem").val());
+                $("#mensagem").val("");
+            });
+        })
+    </script>
+
+</body>
+</html>
